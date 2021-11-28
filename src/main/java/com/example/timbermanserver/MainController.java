@@ -1,5 +1,6 @@
 package com.example.timbermanserver;
 
+import com.example.timbermanserver.core.GameRoom;
 import com.example.timbermanserver.entities.Role;
 import com.example.timbermanserver.entities.User;
 import com.example.timbermanserver.repositories.UserRepository;
@@ -59,6 +60,30 @@ public class MainController {
 
         return userRepository.findAll();
 
+    }
+
+    @GetMapping("/test")
+    public String test() {
+        GameRoom room = new GameRoom(new User(
+                "test2",
+                "test2",
+                passwordEncoder.encode("test2"),
+                true,
+                "test2",
+                Collections.singleton(Role.ADMIN)
+        ), 2);
+        room.joinPlayer(new User(
+                "test2",
+                "test2",
+                passwordEncoder.encode("test2"),
+                true,
+                "test2",
+                Collections.singleton(Role.ADMIN)
+        ));
+
+        room.startPreparation();
+
+        return "well";
     }
 
     @GetMapping(value = "/localization", produces = "application/json")
