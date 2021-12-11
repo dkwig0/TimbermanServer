@@ -27,11 +27,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/**/*").permitAll()
-                .anyRequest().permitAll()
+                .antMatchers(
+                        "/new",
+                        "/static/js/*",
+                        "/static/css/*",
+                        "/static/image/*"
+                        ).permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .csrf().disable()
-                .formLogin();
+                .formLogin()
+                .and()
+                .httpBasic();
     }
 
     @Override

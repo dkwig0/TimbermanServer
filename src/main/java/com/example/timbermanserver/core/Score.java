@@ -1,14 +1,16 @@
 package com.example.timbermanserver.core;
 
 import com.example.timbermanserver.entities.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Score {
 
+    @JsonIgnoreProperties({"email"})
     private final User player;
-    private Long points;
+    private Long points = 0l;
     private List<Long> timeStamps = new ArrayList<>();
 
     public Score(User player) {

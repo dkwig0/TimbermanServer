@@ -2,22 +2,21 @@ package com.example.timbermanserver.core;
 
 import com.example.timbermanserver.core.exceptions.MultipleRoomIdInitializationException;
 import com.example.timbermanserver.entities.User;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
+import java.util.stream.Collectors;
 
+@JsonSerialize(using = GameRoomSerializer.class)
 public class GameRoom {
 
+    public final Integer maxPlayers;
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
-
-    private final Integer MAX_PLAYERS;
     private Long id;
     /**
-     * Contains player
+     * Contains player inside
      */
     private Map<Long, Score> scores = new HashMap<>();
     private boolean active = false;
@@ -25,7 +24,15 @@ public class GameRoom {
 
     public GameRoom(User initialPlayer, Integer maxPlayers) {
         addPlayer(initialPlayer);
-        this.MAX_PLAYERS = maxPlayers;
+        this.maxPlayers = maxPlayers;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Map<Long, Score> getScores() {
+        return scores;
     }
 
     public boolean isActive() {
@@ -57,9 +64,10 @@ public class GameRoom {
     }
 
     public boolean isReady() {
-        return scores.size() >= this.MAX_PLAYERS;
+        return scores.size() >= this.maxPlayers;
     }
 
+    // TODO cannot start prep before game end
     public void startPreparation() {
         timer.schedule(new TimerTask() {
             @Override
@@ -84,6 +92,13 @@ public class GameRoom {
     private void endGame() {
         this.active = false;
         LOG.info("Game ended:" + this.id);
+    }
+
+    public List<User> getUsers() {
+        return scores.entrySet().stream()
+                .map(Map.Entry::getValue)
+                .map(Score::getPlayer)
+                .collect(Collectors.toList());
     }
 
 }

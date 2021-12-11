@@ -41,8 +41,8 @@ public class MainController {
     public List<User> neW() {
 
         userRepository.save(new User(
-                "test",
-                "test",
+                "test1",
+                "test1",
                 passwordEncoder.encode("test"),
                 true,
                 "test",
