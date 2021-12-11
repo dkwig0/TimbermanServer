@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Timberman</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
+    <script src="script.js"></script>
+    <script src="ws.js"></script>
+    <script th:src="@{/js/ws.js}"></script>
+    <script th:src="@{/js/script.js}"></script>
+</head>
+<body onclick="hitTree();test()">>
+<div class="game">
+    <div class="tree active">
+        <div class="root"></div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+    </div>
+    <div class="man left"></div>
+</div>
+<div class="game">
+    <div class="tree">
+        <div class="root"></div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+        <div class="section">
+            <div class="branch"></div>
+        </div>
+    </div>
+    <div class="man right"></div>
+</div>
+</body>
+</html>

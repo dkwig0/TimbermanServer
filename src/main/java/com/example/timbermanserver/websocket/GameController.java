@@ -2,7 +2,6 @@ package com.example.timbermanserver.websocket;
 
 import com.example.timbermanserver.core.GameRoom;
 import com.example.timbermanserver.core.exceptions.MultipleRoomIdInitializationException;
-import com.example.timbermanserver.core.exceptions.RoomNotFoundException;
 import com.example.timbermanserver.entities.User;
 import com.example.timbermanserver.repositories.UserRepository;
 import org.slf4j.Logger;

@@ -1,0 +1,103 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    width: 100vw;
+    background-image: url(/image/background.png);
+    background-size: contain;
+    background-repeat: repeat-x;
+    overflow: hidden;
+}
+
+@media (max-width: 535px) {
+    body {
+        background-size: cover;
+    }
+}
+
+.game {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-basis: 50%;
+    height: 90%;
+}
+
+.tree {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    flex-direction: column-reverse;
+    height: max-content;
+    width: 100%;
+    overflow: hidden;
+}
+
+.tree > .section {
+    position: relative;
+}
+
+.tree > .section, .branch {
+    width: 300px;
+    height: 75px;
+    transition: 0.1s;
+}
+
+.tree > .section > .branch {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-image: url(/image/trunk1.png);
+    background-size: cover;
+    background-position: center;
+    opacity: 1;
+}
+
+.section.chopped .branch {
+    left: 100%;
+    transform: rotate(150deg);
+    opacity: 0;
+}
+
+.section.chopped {
+    height: 0;
+}
+
+.tree .root {
+    height: 23px;
+    width: 119px;
+    margin-left: 3px;
+    background-image: url(/image/stump.png);
+    background-size: cover;
+    background-position: center;
+}
+
+.man {
+    position: absolute;
+    bottom: 0;
+    height: 150px;
+    width: 200px;
+    background-image: url(/image/man.png);
+    background-size: cover;
+}
+
+.man.hitting {
+    background-position-x: 570px;
+}
+
+.man.left {
+    left: 50%;
+    transform: translate(-180px, 0);
+}
+
+.man.right {
+    right: 50%;
+    transform: translate(180px, 0) scaleX(-1);
+}
