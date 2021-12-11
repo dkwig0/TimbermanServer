@@ -14,7 +14,10 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -65,7 +68,7 @@ public class GameController {
     }
 
     @GetMapping(value = "/rooms", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<GameRoom>> getAllRooms(Principal principal) {
+    public ResponseEntity<List<GameRoom>> getAllRooms() {
         return new ResponseEntity<>(rooms, null, HttpStatus.OK);
     }
 
@@ -76,15 +79,12 @@ public class GameController {
                 rooms.stream()
                         .map(GameRoom::getId)
                         .max(Long::compareTo)
-                        .orElse(0L)
+                        .orElse(0L) + 1
         );
-        ResponseEntity<GameRoom> response;
         if (rooms.add(gameRoom)) {
-            response = new ResponseEntity<>(gameRoom, null, HttpStatus.CREATED);
-        } else {
-            response = new ResponseEntity<>(gameRoom, null, HttpStatus.UNPROCESSABLE_ENTITY);
+            return new ResponseEntity<>(gameRoom, null, HttpStatus.CREATED);
         }
-        return response;
+        return new ResponseEntity<>(gameRoom, null, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @PatchMapping(value = "/rooms/{roomId}", produces = MediaType.APPLICATION_JSON_VALUE)
