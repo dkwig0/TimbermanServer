@@ -15,6 +15,7 @@ public class GameRoom {
     public final Integer maxPlayers;
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
     private Long id;
+    private String name;
     /**
      * Contains player inside
      */
@@ -22,9 +23,10 @@ public class GameRoom {
     private boolean active = false;
     private Timer timer = new Timer();
 
-    public GameRoom(User initialPlayer, Integer maxPlayers) {
+    public GameRoom(User initialPlayer, Integer maxPlayers, String name) {
         addPlayer(initialPlayer);
         this.maxPlayers = maxPlayers;
+        this.name = name;
     }
 
     public Long getId() {

@@ -2,7 +2,6 @@ package com.example.timbermanserver.websocket;
 
 import com.example.timbermanserver.core.GameRoom;
 import com.example.timbermanserver.core.exceptions.MultipleRoomIdInitializationException;
-import com.example.timbermanserver.entities.User;
 import com.example.timbermanserver.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,14 +13,12 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class GameController {
@@ -40,51 +37,45 @@ public class GameController {
 
     @MessageMapping("/{roomId}")
     public void registerClientActivity(
-            String message,
             @DestinationVariable("roomId") Long roomId,
             Principal principal
     ) {
 
-        User user = userRepository.findUserByUsername(principal.getName());
-
-        if (gameRoom == null) {
-            gameRoom = new GameRoom(user, 2);
-            LOG.info("Room created");
-
-        } else {
-            if (gameRoom.getUsers().contains(user)) {
-                gameRoom.scorePointTo(user);
-                LOG.info("point scored");
-            } else {
-                //
-                gameRoom.joinPlayer(user);
-                gameRoom.startPreparation();
-                LOG.info("new player joined");
-            }
-        }
-
-        System.out.println(message);
-        simpMessagingTemplate.convertAndSend("/rooms/" + roomId, "test" + roomId);
     }
 
     @GetMapping(value = "/rooms", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<GameRoom>> getAllRooms() {
-        return new ResponseEntity<>(rooms, null, HttpStatus.OK);
+        return new ResponseEntity<>(
+                rooms.stream()
+                        .filter(r -> !r.isReady())
+                        .collect(Collectors.toList()),
+                null,
+                HttpStatus.OK
+        );
     }
 
     @PostMapping(value = "/rooms", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GameRoom> createRoom(Principal principal) throws MultipleRoomIdInitializationException {
-        GameRoom gameRoom = new GameRoom(userRepository.findUserByUsername(principal.getName()), 2);
+    public ResponseEntity<GameRoom> createRoom(
+            @RequestBody String roomName,
+            Principal principal
+    ) throws MultipleRoomIdInitializationException {
+        GameRoom gameRoom = new GameRoom(
+                userRepository.findUserByUsername(principal.getName()),
+                2,
+                roomName
+        );
         gameRoom.initializeRoomId(
                 rooms.stream()
                         .map(GameRoom::getId)
                         .max(Long::compareTo)
                         .orElse(0L) + 1
         );
-        if (rooms.add(gameRoom)) {
+        try {
+            rooms.add(gameRoom);
             return new ResponseEntity<>(gameRoom, null, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(gameRoom, null, HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        return new ResponseEntity<>(gameRoom, null, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @PatchMapping(value = "/rooms/{roomId}", produces = MediaType.APPLICATION_JSON_VALUE)

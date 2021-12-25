@@ -15,8 +15,16 @@
     <script th:src="@{/js/ws.js}"></script>
     <script th:src="@{/js/script.js}"></script>
 </head>
-<body onclick="hitTree();test()">>
-<div class="game">
+<body>
+<div class="menu-container">
+    <div class="menu">
+        <div class="button">creatE</div>
+        <div class="button">find</div>
+        <div class="button">options</div>
+        <div class="button">Exit</div>
+    </div>
+</div>
+<div class="game"  onclick="hitTree();test()">
     <div class="tree active">
         <div class="root"></div>
         <div class="section">
