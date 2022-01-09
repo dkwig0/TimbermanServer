@@ -63,30 +63,6 @@ public class TestController {
 
     }
 
-    @GetMapping("/test")
-    public String test() {
-        GameRoom room = new GameRoom(new User(
-                "test2",
-                "test2",
-                passwordEncoder.encode("test2"),
-                true,
-                "test2",
-                Collections.singleton(Role.ADMIN)
-        ), 2, "test");
-        room.joinPlayer(new User(
-                "test2",
-                "test2",
-                passwordEncoder.encode("test2"),
-                true,
-                "test2",
-                Collections.singleton(Role.ADMIN)
-        ));
-
-        room.startPreparation();
-
-        return "well";
-    }
-
     @GetMapping(value = "/localization", produces = "application/json")
     public @ResponseBody
     Object getLocalization(@RequestParam(name = "code", required = false) String code) throws IOException {

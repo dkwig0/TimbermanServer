@@ -11,20 +11,44 @@
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
     <script src="script.js"></script>
-    <script src="ws.js"></script>
-    <script th:src="@{/js/ws.js}"></script>
     <script th:src="@{/js/script.js}"></script>
 </head>
 <body>
-<div class="menu-container">
-    <div class="menu">
-        <div class="button">creatE</div>
-        <div class="button">find</div>
-        <div class="button">options</div>
-        <div class="button">Exit</div>
+<div class="prep text">Prepare!</div>
+<div class="start text">GO! GO! GO!</div>
+<div class="menu-container open">
+    <div class="menu open">
+        <div class="button">
+            <div class="text" onclick="createRoom()">creatE</div>
+        </div>
+        <div class="button" onclick="openFindRoom()">
+            <div class="text">find</div>
+        </div>
+        <div class="button">
+            <div class="text">options</div>
+        </div>
+        <div class="button">
+            <div class="text">Exit</div>
+        </div>
     </div>
+    <div class="find-room">
+        <div class="header">
+            <div class="title text">Find room</div>
+            <div class="exit" onclick="closeFindRoom()"></div>
+        </div>
+        <div class="rooms">
+            <div class="room">
+                <div class="name text">Test</div>
+            </div>
+            <div class="room">
+                <div class="name text">Test</div>
+            </div>
+        </div>
+    </div>
+    <div class="loading"></div>
+    <div class="results text" onclick="closeResults()">10 - 25</div>
 </div>
-<div class="game"  onclick="hitTree();test()">
+<div class="game"  onclick="hitTree()">
     <div class="tree active">
         <div class="root"></div>
         <div class="section">

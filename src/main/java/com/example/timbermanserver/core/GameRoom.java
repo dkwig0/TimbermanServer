@@ -2,9 +2,11 @@ package com.example.timbermanserver.core;
 
 import com.example.timbermanserver.core.exceptions.MultipleRoomIdInitializationException;
 import com.example.timbermanserver.entities.User;
+import com.example.timbermanserver.websocket.GameController;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,12 +23,14 @@ public class GameRoom {
      */
     private Map<Long, Score> scores = new HashMap<>();
     private boolean active = false;
+    private SimpMessagingTemplate simpMessagingTemplate;
     private Timer timer = new Timer();
 
-    public GameRoom(User initialPlayer, Integer maxPlayers, String name) {
+    public GameRoom(User initialPlayer, Integer maxPlayers, String name, SimpMessagingTemplate simpMessagingTemplate) {
         addPlayer(initialPlayer);
         this.maxPlayers = maxPlayers;
         this.name = name;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     public Long getId() {
@@ -63,6 +67,9 @@ public class GameRoom {
         if (!this.isReady()) {
             addPlayer(player);
         }
+        if (this.isReady()) {
+            startPreparation();
+        }
     }
 
     public boolean isReady() {
@@ -77,6 +84,7 @@ public class GameRoom {
                 startGame();
             }
         }, 5000);
+        simpMessagingTemplate.convertAndSend("/rooms/" + this.id, "{\"message\":\"prep\"}");
         LOG.info("Game prep started:" + this.id);
     }
 
@@ -88,12 +96,24 @@ public class GameRoom {
                 endGame();
             }
         }, 5000);
+        simpMessagingTemplate.convertAndSend("/rooms/" + this.id, "{\"message\":\"start\"}");
         LOG.info("Game started:" + this.id);
     }
 
     private void endGame() {
         this.active = false;
+        simpMessagingTemplate.convertAndSend(
+                "/rooms/" + this.id,
+                "{\"message\":\"end\",\"scores\":[" +
+                        this.scores.values().stream()
+                                .map(s -> "{\"points\":" + s.getPoints() + ",\"username\":\"" +
+                                        s.getPlayer().getUsername() + "\"}")
+                                .reduce((a,b) -> a + ',' + b)
+                                .orElse("") +
+                        "]}"
+        );
         LOG.info("Game ended:" + this.id);
+        GameController.deleteEndedRoom(this);
     }
 
     public List<User> getUsers() {

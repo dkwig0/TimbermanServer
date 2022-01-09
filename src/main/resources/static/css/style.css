@@ -105,43 +105,56 @@ body {
     transform: translate(180px, 0) scaleX(-1);
 }
 
+.menu-container.open {
+    display: flex;
+}
+
 .menu-container {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     backdrop-filter: blur(6px);
     z-index: 100;
 }
 
-.menu {
+.menu.open {
     display: flex;
+}
+
+.menu {
+    margin: 10px;
+    display: none;
     align-items: center;
     justify-content: space-evenly;
     flex-direction: column;
     height: 324px;
     width: 256px;
-    background-image: url("/image/menu-bg.png");
-    background-size: cover;
+    background-image: url("/image/wooden-texture.png");
+    background-size: auto;
+    border: 3px solid #211919;
 }
 
 .menu .button {
+    position: relative;
+    height: 60px;
+    width: 220px;
     display: flex;
     justify-content: center;
-    height: 60px;
+    box-shadow: 0 0 10px 1px #0008;
+}
+
+.text {
+    position: relative;
     line-height: 60px;
-    width: 220px;
     text-align: center;
     font-size: 30px;
     text-transform: uppercase;
     color: #fff;
-    text-shadow: 0px 3px 0 #000, 3px 0px 0 #000, 0px -3px 0 #000, -3px 0px 0 #000;
-    background-image: url("/image/button-bg.png");
-    background-size: cover;
 
     /*  unselectable  */
     -webkit-user-select: none;
@@ -150,7 +163,179 @@ body {
     user-select: none;
 }
 
-.menu .button:hover {
+.menu .button::before {
+    position: absolute;
+    content: "";
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    filter: brightness(0.85);
+    background-image: url("/image/wooden-texture.png");
+    background-size: auto;
+    border: 3px solid #211919;
+    box-sizing: border-box;
+}
+
+.menu .button:hover .text {
     color: #000;
     text-shadow: 0px 3px 0 #fff, 3px 0px 0 #fff, 0px -3px 0 #fff, -3px 0px 0 #fff;
+}
+
+.find-room.open {
+    display: flex;
+}
+
+.find-room {
+    margin: 10px;
+    display: none;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+    height: 580px;
+    width: 256px;
+    background-image: url("/image/wooden-texture.png");
+    background-size: auto;
+    border: 3px solid #211919;
+}
+
+.find-room .header {
+    display: flex;
+    flex-direction: row;
+    height: 10%;
+    width: 100%;
+}
+
+.find-room .header .title {
+    height: 100%;
+    width: 75%;
+}
+
+.find-room .header .exit {
+    width: 14%;
+    background-image: url("/image/cross.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 10px;
+}
+
+.find-room .rooms {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: 90%;
+    width: 100%;
+}
+
+.find-room .rooms .room {
+    height: 64px;
+    margin: 5px;
+    background-image: url("/image/wooden-texture.png");
+    background-size: auto;
+    box-sizing: border-box;
+    border: 3px solid #211919;
+}
+
+.find-room .rooms .room .name:hover {
+    color: #000;
+    text-shadow: 0px 3px 0 #fff, 3px 0px 0 #fff, 0px -3px 0 #fff, -3px 0px 0 #fff;
+}
+
+.loading.open {
+    display: flex;
+}
+
+.loading {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 128px;
+    width: 192px;
+    box-sizing: border-box;
+    background-image: url("/image/wooden-texture.png");
+    background-size: auto;
+    border: 3px solid #211919;
+}
+
+.loading::before {
+    content: ".";
+    color: #fff;
+    text-shadow: 0px 3px 0 #000, 3px 0px 0 #000, 0px -3px 0 #000, -3px 0px 0 #000;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 60px;
+    width: 50px;
+    letter-spacing: 7px;
+    text-align: left;
+    font-size: 30px;
+    animation: loading linear infinite 2s;
+}
+
+@keyframes loading {
+    0% {
+        content: ".";
+    }
+    25% {
+        content: "..";
+    }
+    75% {
+        content: "...";
+    }
+}
+
+.results.open {
+    display: flex;
+}
+
+.results {
+    display: none;
+    color: #fff;
+    text-shadow: 0px 3px 0 #000, 3px 0px 0 #000, 0px -3px 0 #000, -3px 0px 0 #000;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    letter-spacing: 7px;
+    text-align: center;
+    font-size: 60px;
+    box-sizing: border-box;
+    background-image: url("/image/wooden-texture.png");
+    background-size: auto;
+    border: 3px solid #211919;
+    padding: 20px;
+}
+
+.start.open, .prep.open {
+    display: flex;
+}
+
+.start, .prep {
+    display: none;
+    color: #fff;
+    text-shadow: 0px 3px 0 #000, 3px 0px 0 #000, 0px -3px 0 #000, -3px 0px 0 #000;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    letter-spacing: 7px;
+    text-align: center;
+    font-size: 55px;
+}
+
+.start {
+    animation: shaking 1s infinite linear;
+}
+
+@keyframes shaking {
+    0% {
+        font-size: 55px;
+    }
+    50% {
+        font-size: 60px;
+    }
 }

@@ -2,6 +2,7 @@ package com.example.timbermanserver.websocket;
 
 import com.example.timbermanserver.core.GameRoom;
 import com.example.timbermanserver.core.exceptions.MultipleRoomIdInitializationException;
+import com.example.timbermanserver.entities.User;
 import com.example.timbermanserver.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,9 +24,9 @@ import java.util.stream.Collectors;
 @Controller
 public class GameController {
 
-    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private final static Logger LOG = LoggerFactory.getLogger(GameController.class);
 
-    private List<GameRoom> rooms = new ArrayList<>();
+    private static List<GameRoom> rooms = new ArrayList<>();
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -33,14 +34,18 @@ public class GameController {
     @Autowired
     private UserRepository userRepository;
 
-    private GameRoom gameRoom;
-
     @MessageMapping("/{roomId}")
     public void registerClientActivity(
             @DestinationVariable("roomId") Long roomId,
             Principal principal
-    ) {
+    ) throws Exception {
+        User user = userRepository.findUserByUsername(principal.getName());
+        GameRoom room = rooms.stream()
+                .filter(r -> r.getScores().get(user.getId()) != null)
+                .findFirst()
+                .orElseThrow(() -> new Exception("No such room!"));
 
+        room.scorePointTo(user);
     }
 
     @GetMapping(value = "/rooms", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -56,13 +61,14 @@ public class GameController {
 
     @PostMapping(value = "/rooms", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GameRoom> createRoom(
-            @RequestBody String roomName,
             Principal principal
     ) throws MultipleRoomIdInitializationException {
+        User user = userRepository.findUserByUsername(principal.getName());
         GameRoom gameRoom = new GameRoom(
-                userRepository.findUserByUsername(principal.getName()),
+                user,
                 2,
-                roomName
+                user.getUsername(),
+                simpMessagingTemplate
         );
         gameRoom.initializeRoomId(
                 rooms.stream()
@@ -72,9 +78,9 @@ public class GameController {
         );
         try {
             rooms.add(gameRoom);
-            return new ResponseEntity<>(gameRoom, null, HttpStatus.CREATED);
+            return ResponseEntity.status(HttpStatus.CREATED).body(gameRoom);
         } catch (RuntimeException e) {
-            return new ResponseEntity<>(gameRoom, null, HttpStatus.UNPROCESSABLE_ENTITY);
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(gameRoom);
         }
     }
 
@@ -93,6 +99,11 @@ public class GameController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
+    }
+
+    public static void deleteEndedRoom(GameRoom room) {
+        rooms.remove(room);
+        LOG.info("Room deleted, ID:" + room.getId());
     }
 
 }
