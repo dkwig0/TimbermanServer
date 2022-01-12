@@ -4,7 +4,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Timberman</title>
+    <title>Timberman - Online</title>
     <link rel="stylesheet" href="style.css" type="text/css">
     <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -24,11 +24,8 @@
         <div class="button" onclick="openFindRoom()">
             <div class="text">find</div>
         </div>
-        <div class="button">
-            <div class="text">options</div>
-        </div>
-        <div class="button">
-            <div class="text">Exit</div>
+        <div class="button" onclick="openFindRoom()">
+            <a th:href="@{/logout}" class="text">Log Out</a>
         </div>
     </div>
     <div class="find-room">
@@ -91,7 +88,7 @@
     <div class="man left"></div>
 </div>
 <div class="game">
-    <div class="tree">
+    <div class="tree inactive">
         <div class="root"></div>
         <div class="section">
             <div class="branch"></div>

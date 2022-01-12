@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Registration</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}">
 </head>
 <body>
 <form method="post" th:action="@{/registration}" th:object="${user}">
     <input type="text" name="username" placeholder="Login" th:field="*{username}">
-    <input type="email" name="email" placeholder="Login" th:field="*{email}">
+    <input type="email" name="email" placeholder="Email" th:field="*{email}">
     <input type="password" name="password" placeholder="Password" th:field="*{password}">
     <input type="submit" name="register" value="Sing Up">
 </form>
 </body>
+<a th:href="@{/login}">Log In</a>
 </html>

@@ -132,8 +132,6 @@ body {
     align-items: center;
     justify-content: space-evenly;
     flex-direction: column;
-    height: 324px;
-    width: 256px;
     background-image: url("/image/wooden-texture.png");
     background-size: auto;
     border: 3px solid #211919;
@@ -143,6 +141,7 @@ body {
     position: relative;
     height: 60px;
     width: 220px;
+    margin: 20px;
     display: flex;
     justify-content: center;
     box-shadow: 0 0 10px 1px #0008;
@@ -307,11 +306,12 @@ body {
     background-image: url("/image/wooden-texture.png");
     background-size: auto;
     border: 3px solid #211919;
-    padding: 20px;
+    padding: 30px;
 }
 
 .start.open, .prep.open {
     display: flex;
+    z-index: 111;
 }
 
 .start, .prep {
@@ -338,4 +338,8 @@ body {
     50% {
         font-size: 60px;
     }
+}
+
+a.text {
+    text-decoration: none;
 }

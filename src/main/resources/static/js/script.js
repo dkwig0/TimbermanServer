@@ -4,6 +4,8 @@ var roomId;
 
 var gameActive = false;
 
+setInterval(enemyHitting, 130)
+
 function initStomp() {
     var socket = new SockJS(host + '/ws-reg')
     stomp = Stomp.over(socket)
@@ -67,6 +69,20 @@ function chopTree() {
     setTimeout(function () {
         $('.tree.active .section:nth-of-type(2)').remove()
     }, 110)
+}
+
+function enemyHitting() {
+    if (gameActive) {
+        $('.tree.inactive .section:nth-of-type(2)').addClass('chopped')
+        $('.tree.inactive').append('<div class="section"><div class="branch"></div></div>')
+        setTimeout(function () {
+            $('.tree.inactive .section:nth-of-type(2)').remove()
+        }, 110)
+        $('.man.right').addClass('hitting')
+        setTimeout(function () {
+            $('.man.right').removeClass('hitting')
+        }, 150)
+    }
 }
 
 function openFindRoom() {

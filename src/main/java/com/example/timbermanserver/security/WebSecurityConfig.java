@@ -26,18 +26,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers(
-                        "/new",
+                        "/login",
                         "/registration",
                         "/activateUser",
-                        "/static/js/*",
-                        "/static/css/*",
-                        "/static/image/*"
+                        "/js/*",
+                        "/css/*",
+                        "/image/*"
                         ).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable()
                 .formLogin()
-                    .defaultSuccessUrl("/")
+                    .loginPage("/login")
+                    .loginProcessingUrl("/login")
+                    .loginProcessingUrl("/login")
+                    .successForwardUrl("/")
+                    .defaultSuccessUrl("/", true)
                 .and()
                 .logout()
                     .logoutSuccessUrl("/login")

@@ -2,14 +2,13 @@ package com.example.timbermanserver.core;
 
 import com.example.timbermanserver.core.exceptions.MultipleRoomIdInitializationException;
 import com.example.timbermanserver.entities.User;
-import com.example.timbermanserver.websocket.GameController;
+import com.example.timbermanserver.controllers.GameController;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @JsonSerialize(using = GameRoomSerializer.class)
 public class GameRoom {
@@ -17,14 +16,14 @@ public class GameRoom {
     public final Integer maxPlayers;
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
     private Long id;
-    private String name;
+    private final String name;
     /**
      * Contains player inside
      */
-    private Map<Long, Score> scores = new HashMap<>();
+    private final Map<Long, Score> scores = new HashMap<>();
     private boolean active = false;
-    private SimpMessagingTemplate simpMessagingTemplate;
-    private Timer timer = new Timer();
+    private final SimpMessagingTemplate simpMessagingTemplate;
+    private final Timer timer = new Timer();
 
     public GameRoom(User initialPlayer, Integer maxPlayers, String name, SimpMessagingTemplate simpMessagingTemplate) {
         addPlayer(initialPlayer);
@@ -116,11 +115,17 @@ public class GameRoom {
         GameController.deleteEndedRoom(this);
     }
 
-    public List<User> getUsers() {
-        return scores.entrySet().stream()
-                .map(Map.Entry::getValue)
-                .map(Score::getPlayer)
-                .collect(Collectors.toList());
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("GameRoom{");
+        sb.append("maxPlayers=").append(maxPlayers);
+        sb.append(", id=").append(id);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", scores=").append(scores);
+        sb.append(", active=").append(active);
+        sb.append(", simpMessagingTemplate=").append(simpMessagingTemplate);
+        sb.append(", timer=").append(timer);
+        sb.append('}');
+        return sb.toString();
     }
-
 }

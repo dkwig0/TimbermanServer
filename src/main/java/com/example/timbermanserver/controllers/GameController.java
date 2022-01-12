@@ -1,4 +1,4 @@
-package com.example.timbermanserver.websocket;
+package com.example.timbermanserver.controllers;
 
 import com.example.timbermanserver.core.GameRoom;
 import com.example.timbermanserver.core.exceptions.MultipleRoomIdInitializationException;
@@ -64,23 +64,25 @@ public class GameController {
             Principal principal
     ) throws MultipleRoomIdInitializationException {
         User user = userRepository.findUserByUsername(principal.getName());
-        GameRoom gameRoom = new GameRoom(
+        GameRoom room = new GameRoom(
                 user,
                 2,
                 user.getUsername(),
                 simpMessagingTemplate
         );
-        gameRoom.initializeRoomId(
+        room.initializeRoomId(
                 rooms.stream()
                         .map(GameRoom::getId)
                         .max(Long::compareTo)
                         .orElse(0L) + 1
         );
         try {
-            rooms.add(gameRoom);
-            return ResponseEntity.status(HttpStatus.CREATED).body(gameRoom);
+            rooms.add(room);
+            LOG.info("Room was successfully created, ID:" + room.getId());
+            return ResponseEntity.status(HttpStatus.CREATED).body(room);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(gameRoom);
+            LOG.warn("Room was NOT created, Entity:" + room.toString());
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(room);
         }
     }
 
@@ -92,10 +94,13 @@ public class GameController {
                 .orElse(null);
 
         if (room == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            LOG.warn("User tried to join room, which doesn't exists, ID:" + room.getId());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         room.joinPlayer(userRepository.findUserByUsername(principal.getName()));
+
+        LOG.info("User joined room, ID:" + room.getId());
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
