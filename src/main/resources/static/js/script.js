@@ -1,4 +1,4 @@
-var host = 'http://localhost:8109';
+var host = 'https://timberman-server.herokuapp.com';
 var stomp;
 var roomId;
 
